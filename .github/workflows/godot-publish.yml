@@ -2,9 +2,7 @@
 
 name: Godot Package (NPM)
 
-on:
-  release:
-    types: [created]
+on: [push]
 
 jobs:
   publish-gpr:
