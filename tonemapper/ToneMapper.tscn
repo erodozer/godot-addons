@@ -1,0 +1,31 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="tonemap_pp.tres" type="Material" id=1]
+[ext_resource path="ToneMapper.gd" type="Script" id=2]
+[ext_resource path="palettes/tonemap0.png" type="Texture" id=3]
+[ext_resource path="palettes/tonemap3.png" type="Texture" id=4]
+[ext_resource path="palettes/tonemap1.png" type="Texture" id=5]
+[ext_resource path="palettes/tonemap2.png" type="Texture" id=6]
+
+[node name="ToneMap" type="Control"]
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+palettes = [ ExtResource( 3 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 4 ) ]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer"]
+copy_mode = 2
+rect = Rect2( 0, 0, 320, 240 )
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/BackBufferCopy"]
+material = ExtResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
