@@ -13,7 +13,6 @@ SceneManager.gd
 extends Node
 
 onready var anim = $Transition/Fader/AnimationPlayer
-onready var loading_label = $Transition/Fader/Label
 onready var container = $Scene
 
 var current_scene
@@ -53,8 +52,6 @@ func change_scene(next_scene, params=[]):
 	anim.play_backwards("Fade")
 	yield(anim, "animation_finished")
 	
-	loading_label.visible = true
-		
 	var scene = current_scene
 	if scene != null:
 		if scene.has_method("_teardown"):
@@ -83,7 +80,6 @@ func change_scene(next_scene, params=[]):
 			yield(state, "completed")
 	emit_signal("setup")
 	
-	loading_label.visible = false
 	anim.play("Fade")
 	yield(anim, "animation_finished")
 	

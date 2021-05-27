@@ -1,6 +1,6 @@
 {
   "name": "@nhydock/godot-ssm",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple scene manager for godot",
   "main": "SceneManager.tscn",
   "repository": {
