@@ -1,6 +1,6 @@
 {
   "name": "@nhydock/godot-pausestack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "repository": {
     "type": "git",
@@ -15,6 +15,6 @@
   "author": "Nicholas Hydock",
   "license": "MIT",
   "files": [
-    "screenshot.gd"
+    "Pause.gd"
   ]
 }
