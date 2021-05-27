@@ -19,7 +19,12 @@ jobs:
       - run: |
           for i in ./*; do
             if [ -d "$i" ]; then
-              npm publish $i
+              name=$(jq '.name' $i/package.json)
+              version=$(jq '.version' $i/package.json)
+              # compare published to what's in the repo
+              if [ $(npm show $name version) = $version ]
+                npm publish $i
+              fi
             fi
           done
         env:
