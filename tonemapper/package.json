@@ -1,0 +1,24 @@
+{
+  "name": "@nhydock/godot-tonemapper",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nhydock/godot-addons.git"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
+  },
+  "keywords": [
+    "godot"
+  ],
+  "author": "Nicholas Hydock",
+  "license": "MIT",
+  "files": [
+    "ToneMap.tscn",
+    "ToneMap.gd",
+    "tonemap_pp.tres",
+    "clamp.shader",
+    "palettes"
+  ]
+}

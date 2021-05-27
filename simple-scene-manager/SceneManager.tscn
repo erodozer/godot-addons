@@ -1,0 +1,78 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="./SceneManager.gd" type="Script" id=1]
+[ext_resource path="./transitions/dither.png" type="Texture" id=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+uniform float transition: hint_range(0, 1);
+
+float val(vec3 color) {
+	return max(max(color.r, color.g), color.b);
+}
+
+void fragment() {
+	vec4 sample = texture(TEXTURE, UV.xy);
+	if (val(sample.rgb) < transition) {
+		COLOR = vec4(0,0,0,0)
+	} else {
+		COLOR = vec4(0,0,0,1);
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/transition = 0.0
+
+[sub_resource type="Animation" id=3]
+length = 0.4
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_param/transition")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, true, false ]
+}
+
+[node name="SceneManager" type="Node" groups=[
+"scene_manager",
+]]
+script = ExtResource( 1 )
+
+[node name="Transition" type="CanvasLayer" parent="."]
+pause_mode = 2
+layer = 127
+
+[node name="Fader" type="TextureRect" parent="Transition"]
+material = SubResource( 2 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+expand = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Transition/Fader"]
+autoplay = "Fade"
+anims/Fade = SubResource( 3 )
+
+[node name="Scene" type="Node" parent="."]

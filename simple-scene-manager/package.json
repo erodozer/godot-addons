@@ -1,0 +1,22 @@
+{
+  "name": "@nhydock/godot-ssm",
+  "version": "1.0.0",
+  "description": "A simple scene manager for godot",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nhydock/godot-addons.git"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
+  },
+  "keywords": [
+    "godot"
+  ],
+  "author": "Nicholas Hydock",
+  "license": "MIT",
+  "files": [
+    "SceneManager.gd",
+    "SceneManager.tscn",
+    "transitions"
+  ]
+}
