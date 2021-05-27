@@ -16,13 +16,14 @@ jobs:
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
-      - run: |
+      - name: Publish packages
+        run: |
           for i in ./*; do
             if [ -d "$i" ]; then
               name=$(jq '.name' $i/package.json)
               version=$(jq '.version' $i/package.json)
               # compare published to what's in the repo
-              if [ $(npm show $name version) = $version ]
+              if [ $(npm show $name version) = $version ]; then
                 npm publish $i
               fi
             fi
