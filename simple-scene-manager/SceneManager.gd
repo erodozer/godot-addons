@@ -21,6 +21,15 @@ var is_active = false
 signal setup
 signal started
 
+static func load_async(path):
+	yield(Engine.get_main_loop(), "idle_frame")
+	var loader = ResourceLoader.load_interactive(path)
+	while loader.poll() == OK:
+		yield(Engine.get_main_loop(), "idle_frame")
+	
+	assert(loader.poll() == ERR_FILE_EOF)
+	return loader.get_resource()
+
 func _notification(what: int) -> void:
 	match what:
 		MainLoop.NOTIFICATION_WM_FOCUS_OUT:
@@ -49,7 +58,7 @@ func change_scene(next_scene, params=[]):
 	get_tree().paused = true
 	is_active = true
 	
-	anim.play_backwards("Fade")
+	anim.play("Fade")
 	yield(anim, "animation_finished")
 	
 	var scene = current_scene
@@ -58,15 +67,18 @@ func change_scene(next_scene, params=[]):
 			var state = scene._teardown()
 			if state and state is GDScriptFunctionState:
 				yield(state, "completed")
-		scene.queue_free()
 		yield(get_tree(), "idle_frame")
+		scene.queue_free()
+		yield(scene, "tree_exited")
 	
 	if next_scene is String:
 		"""
 		if a scene node is passed through, like with debugging,
 		we only need to fade in.  Else we're loading the scene
 		"""
-		current_scene = load(next_scene).instance()
+		next_scene = next_scene if next_scene.begins_with("res://") else "res://scenes/%s/scene.tscn" % next_scene
+		var res = yield(load_async(next_scene), "completed")
+		current_scene = res.instance()
 	elif next_scene is Node:
 		current_scene = next_scene
 	else:
@@ -80,7 +92,7 @@ func change_scene(next_scene, params=[]):
 			yield(state, "completed")
 	emit_signal("setup")
 	
-	anim.play("Fade")
+	anim.play_backwards("Fade")
 	yield(anim, "animation_finished")
 	
 	get_tree().paused = false
