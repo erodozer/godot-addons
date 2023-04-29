@@ -29,9 +29,9 @@ func _ready():
 		var s = get_tree().current_scene
 		if s.is_in_group("scene"):
 			s.get_parent().remove_child(s)
-			change_scene(s)
+			_change_scene(s)
 	else:
-		change_scene(container.get_child(0))
+		_change_scene(container.get_child(0))
 
 static func change_scene(next_scene, params=[]):
 	Engine.get_main_loop().get_nodes_in_group('scene_manager')[0]._change_scene(next_scene, params)
@@ -45,11 +45,11 @@ func _change_scene(next_scene, params=[]):
 	get_tree().paused = true
 	is_active = true
 	
-	anim.play("Fade")
-	await anim.animation_finished
-	
 	var scene = current_scene
 	if scene != null:
+		anim.play("Fade")
+		await anim.animation_finished
+		
 		if scene.has_method("_teardown"):
 			await scene._teardown()
 		await get_tree().process_frame
