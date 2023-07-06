@@ -1,6 +1,6 @@
 """
 Screenshot.gd
-@author Nicholas Hydock <nhydock@gmail.com>
+@author Erodozer <ero@erodozer.moe>
 @description |>
 	Simple global tool for capturing crisp screenshots with a hotkey
 """

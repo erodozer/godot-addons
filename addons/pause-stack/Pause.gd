@@ -1,6 +1,6 @@
 """
 PauseStack.gd
-@author Nicholas Hydock <nhydock@gmail.com>
+@author Erodozer <ero@erodozer.moe>
 @description |>
 	Pause stack is a simple state manager for complex pause state in a game.
 	Use this as a replacement for toggling get_tree().pause.  This gives finer

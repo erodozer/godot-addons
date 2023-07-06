@@ -1,6 +1,6 @@
 """
 godash.gd
-@author Nicholas Hydock <nhydock@gmail.com>
+@author Erodozer <ero@erodozer.moe>
 @description |>
 	Collection of basic utilities that I find useful for game development
 	that overcomes some of the missing features of gdscript
@@ -8,7 +8,7 @@ godash.gd
 	Library and name inspired by lodash for javascript
 """
 
-extends Reference
+extends RefCounted
 
 enum SELECT_CHOICE { KEY, VALUE }
 
@@ -75,10 +75,10 @@ static func enumerate_dir(resource_dir, ext = null) -> Array:
 	
 	Good for when you just want names without loading the actual file.
 	"""
-	var item_dir = Directory.new()
+	var item_dir = DirAccess.open(resource_dir)
 	var _items = []
-	if item_dir.open(resource_dir) == OK:
-		item_dir.list_dir_begin(true)
+	if item_dir:
+		item_dir.list_dir_begin()
 		var file_name = item_dir.get_next()
 		while (file_name != ""):
 			if (not ext) or (ext and file_name.ends_with(ext)):
@@ -98,10 +98,10 @@ static func load_dir(resource_dir, ext = '.tres', recurse = false) -> Dictionary
 	"""
 	if ext is String:
 		ext = [ext]
-	var item_dir = Directory.new()
+	var item_dir = DirAccess.open(resource_dir)
 	var _items = {}
-	if item_dir.open(resource_dir) == OK:
-		item_dir.list_dir_begin(true)
+	if item_dir:
+		item_dir.list_dir_begin()
 		var file_name = item_dir.get_next()
 		
 		while (file_name != ""):
@@ -122,11 +122,10 @@ static func load_dir(resource_dir, ext = '.tres', recurse = false) -> Dictionary
 	return _items
 
 static func load_async(path):
-	yield(Engine.get_main_loop(), "idle_frame")
-	var loader = ResourceLoader.load_interactive(path)
-	while loader.poll() == OK:
-		yield(Engine.get_main_loop(), "idle_frame")
+	await Engine.get_main_loop().process_frame
+	var loader = ResourceLoader.load_threaded_request(path)
+	while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		await Engine.get_main_loop().process_frame
 	
-	assert(loader.poll() == ERR_FILE_EOF)
-	return loader.get_resource()
+	return ResourceLoader.load_threaded_get(path)
 	
