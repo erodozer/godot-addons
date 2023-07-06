@@ -31,7 +31,9 @@ func _ready():
 			s.get_parent().remove_child(s)
 			_change_scene(s)
 	else:
-		_change_scene(container.get_child(0))
+		var scene = container.get_child(0)
+		container.remove_child(scene)
+		_change_scene(scene)
 
 static func change_scene(next_scene, params=[]):
 	Engine.get_main_loop().get_nodes_in_group('scene_manager')[0]._change_scene(next_scene, params)
