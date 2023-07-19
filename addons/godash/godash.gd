@@ -110,8 +110,8 @@ static func load_dir(resource_dir, ext = '.tres', recurse = false) -> Dictionary
 				_items = extend(_items, _sub_items)
 			else:
 				for e in ext:
-					if file_name.ends_with(e) or file_name.ends_with(e + ".remap"):
-						file_name = file_name.trim_suffix(".remap")
+					if file_name.ends_with(e) or file_name.ends_with(e + ".remap") or file_name.ends_with(e + ".import"):
+						file_name = file_name.trim_suffix(".remap").trim_suffix(".import")
 						var item = load(resource_dir + "/" + file_name)
 						if item:
 							_items[file_name] = item
