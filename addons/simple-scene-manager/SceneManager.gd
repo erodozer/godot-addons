@@ -46,18 +46,12 @@ signal started
 signal teardown
 
 func _ready():
-	var container = %Scene
-	if container.get_child_count() == 0:
-		# force wait until current scene is ready
-		await get_tree().process_frame
-		var s = get_tree().current_scene
-		if s.is_in_group("scene"):
-			s.get_parent().remove_child(s)
-			change_scene(s)
-	else:
-		var scene = container.get_child(0)
-		container.remove_child(scene)
-		change_scene(scene)
+	# remove and readd current scene to guarantee intro
+	# lifecycle hooks
+	var s = get_tree().current_scene
+	if s.is_in_group("scene"):
+		await s.get_parent().ready # wait until scene is fully ready
+		change_scene(s)
 
 ## Changes scene with a transition.
 ## You can hold the fade back in transition if desired until
@@ -68,23 +62,16 @@ func change_scene(next_scene, params=[]):
 	get_tree().paused = true
 	
 	var anim = %AnimationPlayer
-	var container = %Scene
-	var current_scene = container.get_child(-1)
+	var current_scene = get_tree().current_scene
 	if current_scene != null:
 		if current_scene.has_method("_teardown"):
 			await current_scene._teardown()
 			
 		teardown.emit()
 			
-		anim.play("Fade")
-		await anim.animation_finished
-		
-		# if any additional processing should happen after fade-out
-		# use the built-in tree_exited hook
-		
-		await get_tree().process_frame
-		current_scene.queue_free()
-		await current_scene.tree_exited
+		if (next_scene is Node and current_scene != next_scene) or not (next_scene is Node):
+			anim.play("Fade")
+			await anim.animation_finished
 	
 	if next_scene is String:
 		# if a scene node is passed through, like with debugging,
@@ -102,14 +89,20 @@ func change_scene(next_scene, params=[]):
 					assert(false, "Failed to load scene, this should never happen")
 					return false
 				
-		current_scene = res.instantiate()
+		get_tree().change_scene_to_packed(res)
 	elif next_scene is Node:
+		get_tree().current_scene = next_scene
+
+		if current_scene != next_scene:
+			current_scene.queue_free()
+		
 		current_scene = next_scene
+		next_scene.request_ready()
 	else:
-		current_scene = next_scene.instantiate()
+		get_tree().change_scene_to_packed(next_scene)
 		
-	container.add_child(current_scene)
-		
+	await get_tree().process_frame
+	current_scene = get_tree().current_scene
 	if current_scene.has_method("_setup"):
 		await current_scene._setup(params)
 		
