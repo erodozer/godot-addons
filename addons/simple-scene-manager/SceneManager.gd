@@ -35,7 +35,7 @@ class_name SimpleSceneManager
 ## assign that to your AutoLoad.[br]
 ## [br]
 ## @author: Erodozer <ero@erodozer.moe> [br]
-## @version: 3.0.0 [br]
+## @version: 3.0.1 [br]
 ## @godot_version: [min 4.0] [br]
 
 ## Signal emitted after scene _setup hook has been completed
@@ -52,6 +52,8 @@ func _ready():
 	if s.is_in_group("scene"):
 		await s.get_parent().ready # wait until scene is fully ready
 		change_scene(s)
+	else: # testing non-scenes should not require scene manager
+		queue_free()
 
 ## Changes scene with a transition.
 ## You can hold the fade back in transition if desired until
@@ -73,7 +75,7 @@ func change_scene(next_scene, params=[]):
 			anim.play("Fade")
 			await anim.animation_finished
 	
-	if next_scene is String:
+	if next_scene is String and not OS.has_feature("web"):
 		# if a scene node is passed through, like with debugging,
 		# we only need to fade in.  Else we're loading the scene
 		next_scene = next_scene if next_scene.begins_with("res://") else "res://scenes/%s/scene.tscn" % next_scene
@@ -90,6 +92,9 @@ func change_scene(next_scene, params=[]):
 					return false
 				
 		get_tree().change_scene_to_packed(res)
+	elif next_scene is String: # web does not support threaded resource loading
+		next_scene = next_scene if next_scene.begins_with("res://") else "res://scenes/%s/scene.tscn" % next_scene
+		get_tree().change_scene_to_file(next_scene)
 	elif next_scene is Node:
 		get_tree().current_scene = next_scene
 
