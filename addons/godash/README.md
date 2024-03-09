@@ -17,7 +17,7 @@ Preload the godash.gd file into any script that you need it.  All functions are 
 
 extends Node
 
-const godash = preload("res://node_modules/@nhydock/godot-lodash/godash.gd")
+const godash = preload("res://addons/godash/godash.gd")
 
 var Enemies = []
 var Items = []
