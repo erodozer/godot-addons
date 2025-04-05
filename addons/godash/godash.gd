@@ -12,6 +12,12 @@ extends RefCounted
 
 enum SELECT_CHOICE { KEY, VALUE }
 
+static func unique(collection: Array):
+	var d = {}
+	for i in collection:
+		d[i] = true
+	return d.keys()
+
 static func rand_choice(collection, select=SELECT_CHOICE.VALUE, rand = null):
 	"""
 	Pick randomly out of a collection.
@@ -68,26 +74,23 @@ static func extend(d1: Dictionary, d2: Dictionary) -> Dictionary:
 	for k in d2.keys():
 		out[k] = d2[k]
 	return out
-
-static func enumerate_dir(resource_dir, ext = null) -> Array:
+	
+static func enumerate_dir(dir: String, extension: String = "", recurse: bool = true) -> Array:
 	"""
 	Fetch a list of files in a directory that match the extension.
 	
 	Good for when you just want names without loading the actual file.
 	"""
-	var item_dir = DirAccess.open(resource_dir)
-	var _items = []
-	if item_dir:
-		item_dir.list_dir_begin()
-		var file_name = item_dir.get_next()
-		while (file_name != ""):
-			if (not ext) or (ext and file_name.ends_with(ext)):
-				_items.append("%s%s" % [resource_dir, file_name])
-			file_name = item_dir.get_next()
-		item_dir.list_dir_end()
-	else:
-		printerr("can't load items: %s" % [resource_dir])
-	return _items
+	var files: Array[String] = []
+	for f in DirAccess.get_files_at(dir):
+		if extension.is_empty() or f.ends_with(extension):
+			files.append(dir.path_join(f))
+		
+	if recurse:
+		for d in DirAccess.get_directories_at(dir):
+			files.append_array(enumerate_dir(dir.path_join(d), extension, recurse))
+	
+	return files
 
 static func load_dir(resource_dir, ext = '.tres', recurse = false) -> Dictionary:
 	"""
@@ -96,31 +99,13 @@ static func load_dir(resource_dir, ext = '.tres', recurse = false) -> Dictionary
 	
 	This uses blocking io and is not suitable for large directories with lots of big files
 	"""
-	if ext is String:
-		ext = [ext]
-	var item_dir = DirAccess.open(resource_dir)
-	var _items = {}
-	if item_dir:
-		item_dir.list_dir_begin()
-		var file_name = item_dir.get_next()
-		
-		while (file_name != ""):
-			if item_dir.current_is_dir() and recurse:
-				var _sub_items = load_dir(resource_dir + "/" + file_name, ext, recurse)
-				_items = extend(_items, _sub_items)
-			else:
-				for e in ext:
-					if file_name.ends_with(e) or file_name.ends_with(e + ".remap") or file_name.ends_with(e + ".import"):
-						file_name = file_name.trim_suffix(".remap").trim_suffix(".import")
-						var item = load(resource_dir + "/" + file_name)
-						if item:
-							_items[file_name] = item
-							break
-			file_name = item_dir.get_next()
-		item_dir.list_dir_end()
-	else:
-		printerr("can't load items: %s" % [resource_dir])
-	return _items
+	var files = enumerate_dir(resource_dir, ext, recurse)
+	return files.reduce(
+		func (d, f):
+			d[f] = load(f)
+			return d,
+		{}
+	)
 
 static func load_async(path):
 	await Engine.get_main_loop().process_frame
@@ -130,3 +115,32 @@ static func load_async(path):
 	
 	return ResourceLoader.load_threaded_get(path)
 	
+static func v32xy(v: Vector3) -> Vector2:
+	return Vector2(
+		v.x, v.y
+	)
+
+static func v32xz(v: Vector3) -> Vector2:
+	return Vector2(
+		v.x, v.z
+	)
+
+static func v32yz(v: Vector3) -> Vector2:
+	return Vector2(
+		v.y, v.z
+	)
+	
+static func v23xy(v: Vector2) -> Vector3:
+	return Vector3(
+		v.x, v.y, 0
+	)
+
+static func v23yz(v: Vector2) -> Vector3:
+	return Vector3(
+		0, v.x, v.y
+	)
+	
+static func v23xz(v: Vector2) -> Vector3:
+	return Vector3(
+		v.x, 0, v.y
+	)
