@@ -18,9 +18,12 @@ static func unique(collection: Array):
 		d[i] = true
 	return d.keys()
 
-static func rand_choice(collection, select=SELECT_CHOICE.VALUE, rand = null):
+static func rand_choice(collection, select:SELECT_CHOICE = SELECT_CHOICE.VALUE, rand: RandomNumberGenerator = null):
 	"""
 	Pick randomly out of a collection.
+
+	Has more control than the built-in random function on arrays.
+	Uses a supplied RandomNumberGenerator instead of being tied to the global random seed
 	"""
 	if len(collection) == 0:
 		return null
@@ -33,12 +36,10 @@ static func rand_choice(collection, select=SELECT_CHOICE.VALUE, rand = null):
 				return collection.keys()[rand.randi() % collection.keys().size()]
 			_:
 				return collection.values()[rand.randi() % collection.values().size()]
-	elif select is RandomNumberGenerator:
-		rand = select
 	var idx = rand.randi() % collection.size()
 	return collection[idx]
 
-static func rand_chance(collection: Dictionary, rand = null):
+static func rand_chance(collection: Dictionary, rand: RandomNumberGenerator = null):
 	"""
 	Select a random key from a dictionary based on percentage chances
 	defined for each key.
@@ -75,7 +76,7 @@ static func extend(d1: Dictionary, d2: Dictionary) -> Dictionary:
 		out[k] = d2[k]
 	return out
 	
-static func enumerate_dir(dir: String, extension: String = "", recurse: bool = true) -> Array:
+static func enumerate_dir(dir: String, extension: Array = [""], recurse: bool = true) -> Array:
 	"""
 	Fetch a list of files in a directory that match the extension.
 	
@@ -83,8 +84,9 @@ static func enumerate_dir(dir: String, extension: String = "", recurse: bool = t
 	"""
 	var files: Array[String] = []
 	for f in DirAccess.get_files_at(dir):
-		if extension.is_empty() or f.ends_with(extension):
-			files.append(dir.path_join(f))
+		for e in extension:
+			if e.is_empty() or f.ends_with(e):
+				files.append(dir.path_join(f))
 		
 	if recurse:
 		for d in DirAccess.get_directories_at(dir):
@@ -92,7 +94,7 @@ static func enumerate_dir(dir: String, extension: String = "", recurse: bool = t
 	
 	return files
 
-static func load_dir(resource_dir, ext = '.tres', recurse = false) -> Dictionary:
+static func load_dir(resource_dir, ext = ['.tres'], recurse = false) -> Dictionary:
 	"""
 	Load resource assets from a directory.
 	Needed for various factories, such as for Items and Enemies
