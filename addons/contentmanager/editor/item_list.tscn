@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://cyq15un8uabuk"]
+
+[ext_resource type="Script" uid="uid://blwo2b3duoksm" path="res://addons/contentmanager/editor/item_list.gd" id="1_f4yy8"]
+
+[node name="ItemList" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_f4yy8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Items"
+
+[node name="Add" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "+"
+
+[node name="Records" type="ItemList" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 1
+item_0/text = "study"
+
+[node name="EditSchema" type="Button" parent="."]
+layout_mode = 2
+text = "Edit Schema"
+
+[connection signal="pressed" from="HBoxContainer/Add" to="." method="_on_add_pressed"]
+[connection signal="item_selected" from="Records" to="." method="_on_item_selected"]
+[connection signal="pressed" from="EditSchema" to="." method="_on_edit_schema_pressed"]
