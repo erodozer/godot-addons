@@ -7,39 +7,26 @@ Screenshot.gd
 
 extends Node
 
-const interval = 1.0/30.0
-const record_wait = 2.0
-var record = false
-var holding = false
-var held = 0
+@onready var screenshot_path = ProjectSettings.globalize_path("user://screenshots")
+
+@export var interval = 1.0
+var timer: Timer
+
+func _ready() -> void:
+	var timer = Timer.new()
+	timer.timeout.connect(snap)
+	add_child(timer)
 
 func snap():
-	var dir = Directory.new()
-	if not dir.dir_exists("user://screenshots"):
-		dir.make_dir_recursive("user://screenshots")
+	if not DirAccess.dir_exists_absolute(screenshot_path):
+		DirAccess.make_dir_recursive_absolute(screenshot_path)
 	var image = get_viewport().get_texture().get_data()
 	image.flip_y()
-	image.save_png("user://screenshots/%d.png" % OS.get_system_time_msecs())
+	image.save_png("user://screenshots/%d.png" % Time.get_unix_time_from_system())
 		
 func _input(event):
 	if event.is_action_pressed("ui_screenshot"):
 		snap()
-		holding = true
-		record = false
-		held = 0
+		timer.start(interval)
 	if event.is_action_released("ui_screenshot"):
-		holding = false
-		record = false
-
-func _process(delta):
-	if record:
-		held += delta
-		if held > interval:
-			held = fmod(held, interval)
-			snap()
-	elif holding:
-		held += delta
-		if held > record_wait:
-			record = true
-			snap()
-			held = 0
+		timer.stop()
