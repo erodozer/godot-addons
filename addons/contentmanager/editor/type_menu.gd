@@ -4,13 +4,17 @@ extends ItemList
 signal content_selected(resource_type: ContentResource)
 
 func _ready() -> void:
-	_load_content_types()
+	visibility_changed.connect(_load_content_types)
 	
 func _load_content_types():
+	if not is_visible_in_tree():
+		return
 	clear()
-	
+
+	ContentManager._enumerate_types()
+	ContentManager._build_index()
 	for meta_instance in ContentManager._types:
-		add_item(meta_instance.category().capitalize())
+		add_item(meta_instance.category().replace("/", " ").capitalize())
 		set_item_metadata(%TypeMenu.item_count - 1, meta_instance)
 		
 	if item_count > 0:

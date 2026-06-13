@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cyq15un8uabuk"]
+[gd_scene format=3 uid="uid://cyq15un8uabuk"]
 
 [ext_resource type="Script" uid="uid://blwo2b3duoksm" path="res://addons/contentmanager/editor/item_list.gd" id="1_f4yy8"]
 
-[node name="ItemList" type="VBoxContainer"]
+[node name="ItemList" type="VBoxContainer" unique_id=1460948586]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,20 +11,20 @@ grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("1_f4yy8")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=920419714]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer"]
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=997555915]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Items"
 
-[node name="Add" type="Button" parent="HBoxContainer"]
+[node name="Add" type="Button" parent="HBoxContainer" unique_id=1378394332]
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 text = "+"
 
-[node name="Records" type="ItemList" parent="."]
+[node name="Records" type="ItemList" parent="." unique_id=704731523]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
@@ -32,7 +32,7 @@ size_flags_vertical = 3
 item_count = 1
 item_0/text = "study"
 
-[node name="EditSchema" type="Button" parent="."]
+[node name="EditSchema" type="Button" parent="." unique_id=1289316756]
 layout_mode = 2
 text = "Edit Schema"
 

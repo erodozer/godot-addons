@@ -27,6 +27,9 @@ func save_changes():
 		return false
 	print("[ContentManager] saving changes to ", path)
 	
+	# make sure the path exists
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(path).get_base_dir())
+	
 	var err = ResourceSaver.save(
 		_editor.get_edited_object(),
 		path,
@@ -40,6 +43,8 @@ func save_changes():
 		_backup = record
 		record.set_path_cache(path)
 		record_updated.emit()
+		EditorInterface.get_resource_filesystem().scan()
+		ContentManager._build_index()
 		return true
 	else:
 		push_error("[ContentManager] unable to save content changes")

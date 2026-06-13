@@ -1,11 +1,9 @@
 ## Type of Resource that can be managed by ContentManager
 ## these resources exist in categorical subfolders within the `res://content` directory
-@tool
-extends Resource
+@abstract extends Resource
 class_name ContentResource
 
-func category():
-	push_error("Category not defined, unable to associate resource")
+@abstract func category()
 
 func editor():
 	return EditorInspector.new()

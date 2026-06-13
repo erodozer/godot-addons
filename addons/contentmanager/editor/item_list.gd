@@ -19,8 +19,10 @@ func _on_content_selected(resource_type: ContentResource) -> void:
 	active_type = resource_type
 
 func _on_item_selected(index: int) -> void:
+	var path = %Records.get_item_metadata(index)
+	assert(path != null, "invalid item path")
 	var record = ResourceLoader.load(
-		%Records.get_item_metadata(index), "", ResourceLoader.CACHE_MODE_REPLACE
+		path, "", ResourceLoader.CACHE_MODE_REPLACE
 	)
 	record_selected.emit(record)
 

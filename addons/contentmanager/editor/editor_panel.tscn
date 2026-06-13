@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://be0r4hy8f5obr"]
+[gd_scene format=3 uid="uid://be0r4hy8f5obr"]
 
 [ext_resource type="PackedScene" uid="uid://cyq15un8uabuk" path="res://addons/contentmanager/editor/item_list.tscn" id="2_7krc2"]
 [ext_resource type="Script" uid="uid://d1fxrwsqpy1qp" path="res://addons/contentmanager/editor/type_menu.gd" id="2_bjsjr"]
 [ext_resource type="PackedScene" uid="uid://dpat8g2hmk8t0" path="res://addons/contentmanager/editor/item_editor.tscn" id="2_dp1t0"]
 
-[node name="EditorPanel" type="PanelContainer"]
+[node name="EditorPanel" type="PanelContainer" unique_id=167173687]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,57 +13,51 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=416551364]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MenuBar" type="HBoxContainer" parent="VBoxContainer"]
+[node name="MenuBar" type="HBoxContainer" parent="VBoxContainer" unique_id=1402407394]
 visible = false
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1076915551]
 visible = false
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=29833468]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/HBoxContainer" unique_id=1895383838]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HSplitContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HSplitContainer" unique_id=921005749]
 layout_mode = 2
 
-[node name="AddButton" type="Button" parent="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="AddButton" type="Button" parent="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer" unique_id=1919911627]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 text = "Create Type"
 icon_alignment = 1
 
-[node name="TypeMenu" type="ItemList" parent="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer"]
+[node name="TypeMenu" type="ItemList" parent="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer" unique_id=1946661962]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 size_flags_vertical = 3
-item_count = 5
-item_0/text = "Activity"
-item_1/text = "Actors"
-item_2/text = "Clubs"
-item_3/text = "Events"
-item_4/text = "Skills"
 script = ExtResource("2_bjsjr")
 
-[node name="VSplitContainer" type="HSplitContainer" parent="VBoxContainer/HBoxContainer/HSplitContainer"]
+[node name="VSplitContainer" type="HSplitContainer" parent="VBoxContainer/HBoxContainer/HSplitContainer" unique_id=1427485917]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ItemList" parent="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer" instance=ExtResource("2_7krc2")]
+[node name="ItemList" parent="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer" unique_id=2099955796 instance=ExtResource("2_7krc2")]
 layout_mode = 2
 
-[node name="ItemEditor" parent="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer" instance=ExtResource("2_dp1t0")]
+[node name="ItemEditor" parent="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer" unique_id=1850875770 instance=ExtResource("2_dp1t0")]
 unique_name_in_owner = true
 layout_mode = 2
 
