@@ -6,10 +6,15 @@
 ## Listeners can be bound using simple patterns with wildcard support against message types
 extends Node
 
+const CLEANUP_FREQUENCY = 1.0
+
 var topics: Dictionary[String, Dictionary] = {}
 
 func _ready() -> void:
-	set_process_internal(true)
+	var timer = Timer.new()
+	add_child(timer)
+	timer.timeout.connect(cleanup)
+	timer.start(CLEANUP_FREQUENCY)
 	
 func _match_topic(pattern: String, topic: String):
 	if pattern == "*":
@@ -50,22 +55,19 @@ func dispatch(topic: String, message: Variant):
 			continue
 		for handler in topics.get(key, {}).keys():
 			var h = handler as Callable
-			if h.is_valid():
+			if h and h.is_valid():
 				handler.call(message)
 
 ## does a pass through all registered listeners and cleans up any callable bindings that are no longer valid
+## Called automatically on a fixed interval to reclaim memory
 func cleanup():
 	var update: Dictionary[String, Dictionary] = {}
 	for key in topics:
 		var valid: Dictionary = {}
 		for handler in topics.get(key, {}).keys():
 			var h = handler as Callable
-			if h.is_valid():
+			if h and h.is_valid():
 				valid[handler] = true
 		if not valid.is_empty():
 			update[key] = valid
 	topics = update
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_INTERNAL_PROCESS:
-		cleanup()
