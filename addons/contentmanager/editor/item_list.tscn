@@ -32,10 +32,5 @@ size_flags_vertical = 3
 item_count = 1
 item_0/text = "study"
 
-[node name="EditSchema" type="Button" parent="." unique_id=1289316756]
-layout_mode = 2
-text = "Edit Schema"
-
 [connection signal="pressed" from="HBoxContainer/Add" to="." method="_on_add_pressed"]
 [connection signal="item_selected" from="Records" to="." method="_on_item_selected"]
-[connection signal="pressed" from="EditSchema" to="." method="_on_edit_schema_pressed"]

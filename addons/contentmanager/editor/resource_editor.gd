@@ -11,4 +11,4 @@ func _ready():
 	)
 		
 func edit(resource: ContentResource):
-	%Name/Value.text = record.resource_name
+	%Name/Value.text = record._id

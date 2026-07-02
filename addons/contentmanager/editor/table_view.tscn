@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bl7th6bo74kyf"]
+
+[ext_resource type="Script" uid="uid://wha4cqd17li8" path="res://addons/contentmanager/editor/table_view.gd" id="1_y5vw8"]
+
+[node name="TableView" type="ScrollContainer" unique_id=1823603211]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_y5vw8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=706956366]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=847538536]
+layout_mode = 2
+
+[node name="Commit" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=195415107]
+layout_mode = 2
+text = "Commit"
+
+[node name="ItemList" type="GridContainer" parent="VBoxContainer" unique_id=245622275]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AddButton" type="Button" parent="VBoxContainer" unique_id=844052991]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "+"
+
+[connection signal="pressed" from="VBoxContainer/AddButton" to="." method="_add_row"]

@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://be0r4hy8f5obr"]
 
+[ext_resource type="Script" uid="uid://bkh0vgwi8f47g" path="res://addons/contentmanager/editor/editor_panel.gd" id="1_7krc2"]
+[ext_resource type="PackedScene" uid="uid://dv2vvw50fc08e" path="res://addons/contentmanager/editor/type_menu.tscn" id="1_bjsjr"]
 [ext_resource type="PackedScene" uid="uid://cyq15un8uabuk" path="res://addons/contentmanager/editor/item_list.tscn" id="2_7krc2"]
-[ext_resource type="Script" uid="uid://d1fxrwsqpy1qp" path="res://addons/contentmanager/editor/type_menu.gd" id="2_bjsjr"]
 [ext_resource type="PackedScene" uid="uid://dpat8g2hmk8t0" path="res://addons/contentmanager/editor/item_editor.tscn" id="2_dp1t0"]
+[ext_resource type="PackedScene" uid="uid://bl7th6bo74kyf" path="res://addons/contentmanager/editor/table_view.tscn" id="5_syksq"]
 
 [node name="EditorPanel" type="PanelContainer" unique_id=167173687]
 anchors_preset = 15
@@ -12,6 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_7krc2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=416551364]
 layout_mode = 2
@@ -26,44 +29,42 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=29833468]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/HBoxContainer" unique_id=1895383838]
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer" unique_id=1427485917]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/HSplitContainer" unique_id=921005749]
-layout_mode = 2
-
-[node name="AddButton" type="Button" parent="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer" unique_id=1919911627]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-text = "Create Type"
-icon_alignment = 1
-
-[node name="TypeMenu" type="ItemList" parent="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer" unique_id=1946661962]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("2_bjsjr")
+split_offsets = PackedInt32Array(256)
+split_offset = 256
 
-[node name="VSplitContainer" type="HSplitContainer" parent="VBoxContainer/HBoxContainer/HSplitContainer" unique_id=1427485917]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ItemList" parent="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer" unique_id=2099955796 instance=ExtResource("2_7krc2")]
-layout_mode = 2
-
-[node name="ItemEditor" parent="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer" unique_id=1850875770 instance=ExtResource("2_dp1t0")]
+[node name="TypeMenu" parent="VBoxContainer/HSplitContainer" unique_id=1659662950 instance=ExtResource("1_bjsjr")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer/AddButton" to="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer/TypeMenu" method="_on_add_button_pressed"]
-[connection signal="content_selected" from="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer/TypeMenu" to="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer/ItemList" method="_on_content_selected"]
-[connection signal="content_selected" from="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer/TypeMenu" to="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer/ItemEditor" method="_on_content_selected"]
-[connection signal="item_selected" from="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer/TypeMenu" to="VBoxContainer/HBoxContainer/HSplitContainer/VBoxContainer/TypeMenu" method="_on_item_selected"]
-[connection signal="record_selected" from="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer/ItemList" to="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer/ItemEditor" method="_on_record_selected"]
-[connection signal="record_updated" from="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer/ItemEditor" to="VBoxContainer/HBoxContainer/HSplitContainer/VSplitContainer/ItemList" method="_on_item_editor_record_updated"]
+[node name="TabBar" type="TabContainer" parent="VBoxContainer/HSplitContainer" unique_id=1755011117]
+layout_mode = 2
+size_flags_horizontal = 3
+current_tab = 1
+
+[node name="Individual" type="HSplitContainer" parent="VBoxContainer/HSplitContainer/TabBar" unique_id=1020214322]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="ItemList" parent="VBoxContainer/HSplitContainer/TabBar/Individual" unique_id=2099955796 instance=ExtResource("2_7krc2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ItemEditor" parent="VBoxContainer/HSplitContainer/TabBar/Individual" unique_id=1850875770 instance=ExtResource("2_dp1t0")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TableView" parent="VBoxContainer/HSplitContainer/TabBar" unique_id=1823603211 instance=ExtResource("5_syksq")]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[connection signal="content_selected" from="VBoxContainer/HSplitContainer/TypeMenu" to="VBoxContainer/HSplitContainer/TabBar/Individual/ItemList" method="_on_content_selected"]
+[connection signal="content_selected" from="VBoxContainer/HSplitContainer/TypeMenu" to="VBoxContainer/HSplitContainer/TabBar/Individual/ItemEditor" method="_on_content_selected"]
+[connection signal="content_selected" from="VBoxContainer/HSplitContainer/TypeMenu" to="VBoxContainer/HSplitContainer/TabBar/TableView" method="_on_content_selected"]
+[connection signal="record_selected" from="VBoxContainer/HSplitContainer/TabBar/Individual/ItemList" to="VBoxContainer/HSplitContainer/TabBar/Individual/ItemEditor" method="_on_record_selected"]
+[connection signal="record_updated" from="VBoxContainer/HSplitContainer/TabBar/Individual/ItemEditor" to="." method="_build_index"]
+[connection signal="record_updated" from="VBoxContainer/HSplitContainer/TabBar/Individual/ItemEditor" to="VBoxContainer/HSplitContainer/TabBar/Individual/ItemList" method="_on_item_editor_record_updated"]

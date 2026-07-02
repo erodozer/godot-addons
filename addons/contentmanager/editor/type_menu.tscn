@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://dv2vvw50fc08e"]
+
+[ext_resource type="Script" uid="uid://d1fxrwsqpy1qp" path="res://addons/contentmanager/editor/type_menu.gd" id="1_bnf0k"]
+
+[node name="TypeMenu" type="VBoxContainer" unique_id=1659662950]
+size_flags_vertical = 3
+script = ExtResource("1_bnf0k")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1434562626]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=1940906054]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Resource Types"
+
+[node name="AddButton" type="Button" parent="HBoxContainer" unique_id=1623632497]
+custom_minimum_size = Vector2(32, 24)
+layout_mode = 2
+text = "+"
+icon_alignment = 1
+
+[node name="Items" type="ItemList" parent="." unique_id=965139743]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 7
+item_0/text = "Combat Ability"
+item_1/text = "Combat Enemy"
+item_2/text = "Craft Material"
+item_3/text = "Craft Recipe"
+item_4/text = "Dialog Character"
+item_5/text = "Dialog Timeline"
+item_6/text = "Quest"
+
+[node name="EditSchema" type="Button" parent="." unique_id=864480739]
+layout_mode = 2
+text = "Edit Schema"
+
+[connection signal="pressed" from="HBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="item_selected" from="Items" to="." method="_on_item_selected"]
+[connection signal="pressed" from="EditSchema" to="." method="_on_edit_schema_pressed"]
