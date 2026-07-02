@@ -20,25 +20,17 @@ func _match_topic(pattern: String, topic: String):
 	if pattern == "*":
 		return true
 		
-	var i = 0
-	var n = 0
-	var wildcard = false
-	while n < len(topic):
-		if pattern[i] == "*":
-			wildcard = true
-			i += 1
-			if i >= len(pattern):
-				break
-		if topic[n] == pattern[i]:
-			wildcard = false
-			n += 1
-			i += 1
-		elif wildcard:
-			n += 1
-		else:
-			return false
-			
-	return wildcard or (i == len(pattern) and n == len(topic))
+	# simpler than regex path style matching
+	# performs begins with check when a wildcard is present
+	# wildcards will match everything after they're declared in a string
+	var wildcard = topic.rfind("*")
+	var exact = topic.left(wildcard)
+	for code in topics.keys():
+		if wildcard > -1 and code.begins_with(exact):
+			return true
+		if code == exact:
+			return true
+	return false
 
 func register(listener: Callable, topic: String = "*"):
 	var group: Dictionary = topics.get(topic, {})
