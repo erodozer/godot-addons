@@ -1,3 +1,4 @@
+## Utility functions for Vector types.  Mostly swizzling functions
 extends Object
 
 static func v32xy(v: Vector3) -> Vector2:

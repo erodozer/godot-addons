@@ -5,10 +5,12 @@ extends Object
 ## You can await this procedure which will pause a coroutine
 ## until the end of the frame to make sure the node is emptied
 static func clear_node(root: Node):
-	while root.get_child_count() > 0:
-		for i in root.get_children():
-			i.queue_free()
-		await root.get_tree().process_frame
+	for i in root.get_children():
+		# reclaim name availability
+		root.remove_child(i)
+		# delete the child from memory
+		i.queue_free()
+	await root.get_tree().process_frame
 
 ## Recursively walk through all nodes in a tree, executing  a supplied callable against each encountered node
 ## If you plan on walking nodes on an unchanging tree frequently, it's recommended to use filter_nodes and cache the results.
@@ -47,3 +49,15 @@ static func get_nodes_in_group(root: Node, group: String) -> Array[Node]:
 		func (node:Node):
 			return node.is_in_group(group)
 	)
+
+class NodeCache:
+	var _ref: Node
+	var _internal: Dictionary[NodePath, Node] = {}
+
+	func _init(scene: Node):
+		_ref = scene
+	
+	func get_node(path: NodePath) -> Node:
+		if _internal.get(path) == null:
+			_internal[path] = _ref.get_node(path)
+		return _internal[path]

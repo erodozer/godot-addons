@@ -2,8 +2,8 @@
 ## @author Erodozer <ero@erodozer.moe>
 ## [br][br]
 ## Collection of basic utilities that I find useful for game development
-## that overcomes some of the missing features of gdscript
-##
+## that overcomes some of the missing features of gdscript.
+## [br]
 ## Library and name inspired by lodash for javascript
 
 extends Object
@@ -13,3 +13,5 @@ const files = preload("./modules/files.gd")
 const nodes = preload("./modules/nodes.gd")
 const random = preload("./modules/random.gd")
 const vector = preload("./modules/vector.gd")
+const input = preload("./modules/input.gd")
+const promise = preload("./modules/promise.gd")
