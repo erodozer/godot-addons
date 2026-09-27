@@ -3,15 +3,22 @@
 @abstract extends Resource
 class_name ContentResource
 
-@export var _id: String
+var _id: String :
+	get:
+		if resource_path:
+			return resource_path.get_file().get_basename()
+		return "<NEW>"
 
 @abstract func category()
+
+func editor_icon() -> Texture2D:
+	return preload("res://addons/contentmanager/editor/icons/Shape2D.svg")
 
 func editor():
 	return EditorInspector.new()
 
 func _validate_property(property: Dictionary):
-	if property.name in ["resource_path", "resource_local_to_scene", "resource_name"]:
+	if "resource" in property.name:
 		property.usage = PROPERTY_USAGE_NO_EDITOR
 		property.hint = PROPERTY_HINT_NONE
 	if property.name == "resource":

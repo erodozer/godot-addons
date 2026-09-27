@@ -1,10 +1,15 @@
 [gd_scene format=3 uid="uid://be0r4hy8f5obr"]
 
 [ext_resource type="Script" uid="uid://bkh0vgwi8f47g" path="res://addons/contentmanager/editor/editor_panel.gd" id="1_7krc2"]
-[ext_resource type="PackedScene" uid="uid://dv2vvw50fc08e" path="res://addons/contentmanager/editor/type_menu.tscn" id="1_bjsjr"]
-[ext_resource type="PackedScene" uid="uid://cyq15un8uabuk" path="res://addons/contentmanager/editor/item_list.tscn" id="2_7krc2"]
-[ext_resource type="PackedScene" uid="uid://dpat8g2hmk8t0" path="res://addons/contentmanager/editor/item_editor.tscn" id="2_dp1t0"]
-[ext_resource type="PackedScene" uid="uid://bl7th6bo74kyf" path="res://addons/contentmanager/editor/table_view.tscn" id="5_syksq"]
+[ext_resource type="Texture2D" uid="uid://dwvrdnlo3yhaf" path="res://addons/contentmanager/editor/icons/Shape2D.svg" id="2_slrfh"]
+[ext_resource type="Texture2D" uid="uid://d37k18j5kev4w" path="res://addons/contentmanager/editor/icons/File.svg" id="3_1vlhl"]
+[ext_resource type="Texture2D" uid="uid://ncgdqh2f360u" path="res://addons/contentmanager/editor/icons/Save.svg" id="4_scgqk"]
+[ext_resource type="Texture2D" uid="uid://bo3fkqbxrqnem" path="res://addons/contentmanager/editor/icons/UndoRedo.svg" id="5_idipf"]
+[ext_resource type="Script" uid="uid://bp8h5ceosqgip" path="res://addons/contentmanager/editor/item_editor.gd" id="5_syksq"]
+[ext_resource type="Texture2D" uid="uid://b8wndwvo8h3ge" path="res://addons/contentmanager/editor/icons/Clear.svg" id="6_slrfh"]
+[ext_resource type="Texture2D" uid="uid://com0k5hv8bsc3" path="res://addons/contentmanager/editor/icons/Remove.svg" id="7_1vlhl"]
+[ext_resource type="Texture2D" uid="uid://co7bl0xelqwq0" path="res://addons/contentmanager/editor/icons/Search.svg" id="7_slrfh"]
+[ext_resource type="Script" uid="uid://b6d2h1ma28320" path="res://addons/contentmanager/editor/records_tree.gd" id="9_scgqk"]
 
 [node name="EditorPanel" type="PanelContainer" unique_id=167173687]
 anchors_preset = 15
@@ -22,49 +27,138 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="MenuBar" type="HBoxContainer" parent="VBoxContainer" unique_id=1402407394]
-visible = false
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1076915551]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MenuBar" unique_id=1397138257]
+layout_mode = 2
+theme_type_variation = &"PanelContainerTabbarInner"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MenuBar/PanelContainer" unique_id=1403290106]
+layout_mode = 2
+
+[node name="NewContentType" type="Button" parent="VBoxContainer/MenuBar/PanelContainer/HBoxContainer" unique_id=536183401]
+layout_mode = 2
+tooltip_text = "New Type"
+icon = ExtResource("2_slrfh")
+flat = true
+
+[node name="NewDocument" type="Button" parent="VBoxContainer/MenuBar/PanelContainer/HBoxContainer" unique_id=1942374706]
+layout_mode = 2
+tooltip_text = "New Resource"
+icon = ExtResource("3_1vlhl")
+flat = true
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/MenuBar" unique_id=535990285]
+layout_mode = 2
+
+[node name="DocumentControls" type="PanelContainer" parent="VBoxContainer/MenuBar" unique_id=694963797]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
+theme_type_variation = &"PanelContainerTabbarInner"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MenuBar/DocumentControls" unique_id=1092399510]
+layout_mode = 2
+
+[node name="Save" type="Button" parent="VBoxContainer/MenuBar/DocumentControls/HBoxContainer" unique_id=1032778408]
+layout_mode = 2
+icon = ExtResource("4_scgqk")
+flat = true
+
+[node name="Revert" type="Button" parent="VBoxContainer/MenuBar/DocumentControls/HBoxContainer" unique_id=456727772]
+layout_mode = 2
+icon = ExtResource("5_idipf")
+flat = true
+
+[node name="Clean" type="Button" parent="VBoxContainer/MenuBar/DocumentControls/HBoxContainer" unique_id=588260988]
+layout_mode = 2
+icon = ExtResource("6_slrfh")
+flat = true
+
+[node name="Delete" type="Button" parent="VBoxContainer/MenuBar/DocumentControls/HBoxContainer" unique_id=246887947]
+layout_mode = 2
+icon = ExtResource("7_1vlhl")
+flat = true
 
 [node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer" unique_id=1427485917]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offsets = PackedInt32Array(256)
-split_offset = 256
+split_offsets = PackedInt32Array(224)
+split_offset = 224
 
-[node name="TypeMenu" parent="VBoxContainer/HSplitContainer" unique_id=1659662950 instance=ExtResource("1_bjsjr")]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer" unique_id=1523178770]
+layout_mode = 2
+
+[node name="RecordSearch" type="LineEdit" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=1820157563]
+layout_mode = 2
+placeholder_text = "Search"
+right_icon = ExtResource("7_slrfh")
+
+[node name="Records" type="Tree" parent="VBoxContainer/HSplitContainer/VBoxContainer" unique_id=351837344]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"TreeSecondary"
+allow_search = false
+hide_root = true
+select_mode = 1
+script = ExtResource("9_scgqk")
+
+[node name="ItemEditor" type="ScrollContainer" parent="VBoxContainer/HSplitContainer" unique_id=1674822896]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("5_syksq")
 
-[node name="TabBar" type="TabContainer" parent="VBoxContainer/HSplitContainer" unique_id=1755011117]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=283924460]
 layout_mode = 2
-size_flags_horizontal = 3
-current_tab = 1
 
-[node name="Individual" type="HSplitContainer" parent="VBoxContainer/HSplitContainer/TabBar" unique_id=1020214322]
-visible = false
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=855865656]
 layout_mode = 2
-metadata/_tab_index = 0
 
-[node name="ItemList" parent="VBoxContainer/HSplitContainer/TabBar/Individual" unique_id=2099955796 instance=ExtResource("2_7krc2")]
+[node name="Stats" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=346138658]
 unique_name_in_owner = true
 layout_mode = 2
+text = "Content Types: 0 | Content Resource Total: 0"
 
-[node name="ItemEditor" parent="VBoxContainer/HSplitContainer/TabBar/Individual" unique_id=1850875770 instance=ExtResource("2_dp1t0")]
+[node name="NewDocumentPopup" type="AcceptDialog" parent="." unique_id=2033985881]
 unique_name_in_owner = true
+title = "Create New Resource"
+size = Vector2i(400, 118)
+ok_button_text = "Create"
+
+[node name="GridContainer" type="GridContainer" parent="NewDocumentPopup" unique_id=1389408511]
+offset_right = 40.0
+offset_bottom = 40.0
+columns = 2
+
+[node name="Label" type="Label" parent="NewDocumentPopup/GridContainer" unique_id=607067685]
+layout_mode = 2
+text = "Content Type"
+
+[node name="TypeSelector" type="OptionButton" parent="NewDocumentPopup/GridContainer" unique_id=229283356]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 
-[node name="TableView" parent="VBoxContainer/HSplitContainer/TabBar" unique_id=1823603211 instance=ExtResource("5_syksq")]
+[node name="Label2" type="Label" parent="NewDocumentPopup/GridContainer" unique_id=1972305270]
 layout_mode = 2
-metadata/_tab_index = 1
+text = "Resource Name"
 
-[connection signal="content_selected" from="VBoxContainer/HSplitContainer/TypeMenu" to="VBoxContainer/HSplitContainer/TabBar/Individual/ItemList" method="_on_content_selected"]
-[connection signal="content_selected" from="VBoxContainer/HSplitContainer/TypeMenu" to="VBoxContainer/HSplitContainer/TabBar/Individual/ItemEditor" method="_on_content_selected"]
-[connection signal="content_selected" from="VBoxContainer/HSplitContainer/TypeMenu" to="VBoxContainer/HSplitContainer/TabBar/TableView" method="_on_content_selected"]
-[connection signal="record_selected" from="VBoxContainer/HSplitContainer/TabBar/Individual/ItemList" to="VBoxContainer/HSplitContainer/TabBar/Individual/ItemEditor" method="_on_record_selected"]
-[connection signal="record_updated" from="VBoxContainer/HSplitContainer/TabBar/Individual/ItemEditor" to="." method="_build_index"]
-[connection signal="record_updated" from="VBoxContainer/HSplitContainer/TabBar/Individual/ItemEditor" to="VBoxContainer/HSplitContainer/TabBar/Individual/ItemList" method="_on_item_editor_record_updated"]
+[node name="DocumentName" type="LineEdit" parent="NewDocumentPopup/GridContainer" unique_id=72328095]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/MenuBar/PanelContainer/HBoxContainer/NewContentType" to="." method="_on_new_content_type_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuBar/PanelContainer/HBoxContainer/NewDocument" to="." method="_on_new_document_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuBar/DocumentControls/HBoxContainer/Save" to="VBoxContainer/HSplitContainer/ItemEditor" method="_on_save_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuBar/DocumentControls/HBoxContainer/Revert" to="VBoxContainer/HSplitContainer/ItemEditor" method="_on_revert_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuBar/DocumentControls/HBoxContainer/Clean" to="VBoxContainer/HSplitContainer/ItemEditor" method="_on_clean_pressed"]
+[connection signal="pressed" from="VBoxContainer/MenuBar/DocumentControls/HBoxContainer/Delete" to="VBoxContainer/HSplitContainer/ItemEditor" method="_on_delete_pressed"]
+[connection signal="text_changed" from="VBoxContainer/HSplitContainer/VBoxContainer/RecordSearch" to="." method="_on_record_search_text_changed"]
+[connection signal="item_activated" from="VBoxContainer/HSplitContainer/VBoxContainer/Records" to="." method="_on_records_item_activated"]
+[connection signal="record_updated" from="VBoxContainer/HSplitContainer/ItemEditor" to="." method="_build_index"]
+[connection signal="confirmed" from="NewDocumentPopup" to="." method="_on_new_document_popup_confirmed"]

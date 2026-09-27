@@ -1,9 +1,32 @@
-[gd_scene format=3 uid="uid://dpat8g2hmk8t0"]
+[gd_scene format=3 uid="uid://bk7wtsbtux5ub"]
 
 [ext_resource type="Script" uid="uid://bp8h5ceosqgip" path="res://addons/contentmanager/editor/item_editor.gd" id="1_nxr4o"]
 
+[sub_resource type="DPITexture" id="DPITexture_mk17p"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"m5 1v1h-4v2h14v-2h-4v-1zm-3 4v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8zm1 2h2v6h-2zm4 0h2v6h-2zm4 0h2v6h-2z\"/></svg>
+"
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
+
+[sub_resource type="DPITexture" id="DPITexture_w86vf"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_e3e3p"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"M3 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4l-3-3h-1v6H3zm1 0v5h3V1zm4 8a1 1 0 0 1 0 4 1 1 0 0 1 0-4z\"/></svg>
+"
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
+
 [node name="ItemEditor" type="VBoxContainer" unique_id=969840596]
-anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -11,11 +34,6 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_nxr4o")
-
-[node name="EditorView" type="ScrollContainer" parent="." unique_id=798590761]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
 
 [node name="HSeparator" type="HSeparator" parent="." unique_id=1065469182]
 layout_mode = 2
@@ -25,17 +43,23 @@ layout_mode = 2
 alignment = 2
 
 [node name="Delete" type="Button" parent="HBoxContainer" unique_id=306657383]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 2
 text = "Delete"
+icon = SubResource("DPITexture_mk17p")
 
 [node name="Revert" type="Button" parent="HBoxContainer" unique_id=1715857723]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Revert"
+icon = SubResource("DPITexture_w86vf")
 
 [node name="SaveChanges" type="Button" parent="HBoxContainer" unique_id=2040113807]
+unique_name_in_owner = true
 layout_mode = 2
-text = "Save Changes"
+text = "Save"
+icon = SubResource("DPITexture_e3e3p")
 
 [connection signal="pressed" from="HBoxContainer/Delete" to="." method="_on_delete_pressed"]
 [connection signal="pressed" from="HBoxContainer/Revert" to="." method="revert"]
