@@ -30,6 +30,7 @@ func _build_index():
 		var path: String = content_type.category
 		var idx = 0
 		var slice = path
+		var section_name = ""
 		while idx > -1:
 			idx = path.find("/", idx + 1)
 			slice = path.substr(0, idx)
@@ -39,8 +40,8 @@ func _build_index():
 				continue
 
 			var leaf: TreeItem = %Records.create_item(section)
-			var name = slice.substr(slice.rfind("/") + 1).capitalize()
-			leaf.set_text(0, name)
+			section_name = slice.substr(slice.rfind("/") + 1).capitalize()
+			leaf.set_text(0, section_name)
 			if slice == path:
 				leaf.set_icon(0, content_type.meta_instance.editor_icon())
 				leaf.set_selectable(0, true)
@@ -51,7 +52,7 @@ func _build_index():
 			section = leaf
 			tree[slice] = leaf
 		
-		%TypeSelector.add_item(name)
+		%TypeSelector.add_item(section_name)
 		%TypeSelector.set_item_metadata(%TypeSelector.item_count - 1, content_type)
 		
 		category_count += 1
@@ -90,6 +91,7 @@ func _on_new_content_type_pressed() -> void:
 	)
 
 func _on_new_document_pressed() -> void:
+	
 	%NewDocumentPopup.popup_centered()
 
 func _on_new_document_popup_confirmed() -> void:
@@ -112,8 +114,9 @@ func _on_records_item_activated() -> void:
 	var selected = %Records.get_selected()
 	var record = selected.get_metadata(0)
 	if record:
-		if record.resource_path.is_empty():
-			EditorInterface.edit_script(record.get_script())
+		if "meta_instance" in record:
+			var script = record.meta_instance.get_script()
+			EditorInterface.edit_script(script)
 			EditorInterface.set_main_screen_editor("Script")
 		else:
 			%ItemEditor.record = record as ContentResource
