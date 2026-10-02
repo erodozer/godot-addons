@@ -53,7 +53,7 @@ func _build_index():
 			tree[slice] = leaf
 		
 		%TypeSelector.add_item(section_name)
-		%TypeSelector.set_item_metadata(%TypeSelector.item_count - 1, content_type)
+		%TypeSelector.set_item_metadata(%TypeSelector.item_count - 1, content_type.meta_instance)
 		
 		category_count += 1
 		var resources = []
@@ -91,7 +91,6 @@ func _on_new_content_type_pressed() -> void:
 	)
 
 func _on_new_document_pressed() -> void:
-	
 	%NewDocumentPopup.popup_centered()
 
 func _on_new_document_popup_confirmed() -> void:

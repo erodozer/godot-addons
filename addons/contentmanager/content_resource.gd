@@ -19,7 +19,4 @@ func editor():
 
 func _validate_property(property: Dictionary):
 	if "resource" in property.name:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-		property.hint = PROPERTY_HINT_NONE
-	if property.name == "resource":
-		property.usage = PROPERTY_USAGE_INTERNAL
+		property.usage |= ~PROPERTY_USAGE_NO_EDITOR
