@@ -13,8 +13,10 @@ const shader = preload("./afterimage_material.gdshader")
 
 @export var clone: NodePath ## path to the instance that will be referenced for copying.  Only children of type MeshInstance3D are copied into the after image
 @export_range(0.1, 3.0, 0.01) var lifetime = 0.2 ## Duration that an after image persists/takes to fade away
-@export_range(1, 60, 1) var interval: float = 30.0 ## times per second to create an after image (limit 60 FPS)
-@export_range(1, 100) var POOL_SIZE = 5 ## Limit the number of after images generated
+@export_range(0.01, 3.0, 0.01) var frequency: float = 0.05 ## rate in sec to create an afterimage
+@export_range(1, 100) var pool_size = 5 : ## Limit the number of after images generated
+	set = set_pool_size
+		
 @export var active = false ## Control if after images should be spawning
 
 # internal pool state
@@ -25,7 +27,15 @@ var pool_idx = 0
 var spawner: float = 0
 
 func _ready() -> void:
-	pool.resize(POOL_SIZE)
+	set_pool_size(pool_size)
+
+func set_pool_size(size: int):
+	pool_size = size
+	pool.clear()
+	pool.resize(size)
+	for i in get_children():
+		remove_child(i)
+		i.queue_free()	
 
 func activate():
 	active = true
@@ -52,7 +62,15 @@ func create_image() -> Node3D:
 		add_child(image)
 		pool[pool_idx] = image
 	
-	var t = image.create_tween()
+	var now = Time.get_ticks_msec()
+	image.global_transform = model.global_transform
+	image.scale = Vector3.ONE * 0.99
+	image.set_meta("lifetime", Vector2(now, now + (1000.0 * lifetime)))
+	
+	# Wait for end of frame so we don't have to stall the rendering server while
+	# baking the meshes of each visual instance
+	await RenderingServer.frame_post_draw
+	
 	for mi_n in model.find_children("*", "MeshInstance3D", true, false):
 		var mi = mi_n as MeshInstance3D
 		var node = image.find_child(mi_n.name, false, false)
@@ -67,21 +85,38 @@ func create_image() -> Node3D:
 				image_mat.set_shader_parameter("albedo_texture", mat.get_shader_parameter("albedo_texture"))
 				node.set_surface_override_material(s, image_mat)
 			node.mesh = mi.bake_mesh_from_current_skeleton_pose()
+			node.sorting_offset = -1
+			node.sorting_use_aabb_center = true
 		else:
 			mi.bake_mesh_from_current_skeleton_pose(node.mesh)
-		t.parallel().tween_method(
-			func (f):
-				node.set_instance_shader_parameter("opacity", f),
-			1.0, 0.0, lifetime
-		)
+			mi.transparency = 0
 	
-	image.global_transform = model.global_transform
-	pool_idx = wrapi(pool_idx + 1, 0, POOL_SIZE)
+	pool_idx = wrapi(pool_idx + 1, 0, pool_size)
 	return image
 
+func _fade(amount: float, node: MeshInstance3D):
+	node.transparency = amount
+
 func _process(delta: float) -> void:
+	var now = Time.get_ticks_msec()
+	for i in range(pool_size):
+		var after_image = pool[i]
+		if not after_image:
+			continue
+		var spawn = after_image.get_meta("lifetime")
+		if now > spawn.y and not active:
+			after_image.queue_free()
+			pool[i] = null
+			continue
+		for mesh in after_image.get_children():
+			mesh.transparency = clamp(
+				inverse_lerp(spawn.x, spawn.y, now),
+				0.0, 1.0
+			)
+	
 	if not active:
 		return
-	if (spawner + delta) / (1.0 / interval) > 1.0:
+	
+	if (spawner + delta) > frequency:
 		create_image()
-	spawner = wrapf(spawner + delta, 0, 1.0 / interval)
+	spawner = wrapf(spawner + delta, 0, frequency)

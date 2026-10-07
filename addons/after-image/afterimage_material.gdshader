@@ -3,7 +3,6 @@ render_mode depth_draw_always, cull_disabled, unshaded, blend_add;
 
 uniform sampler2D albedo_texture: filter_nearest, source_color;
 instance uniform vec2 uv_offset = vec2(0.0);
-instance uniform float opacity = 1.0;
 
 const vec3 ign = vec3(0.06711056f, 0.00583715f, 52.9829189f);
 
@@ -15,12 +14,9 @@ void fragment() {
 	if (alpha < 1.0) {
 		discard;
 	}
-	ROUGHNESS = 1.0;
-	AO = 0.0;
-	ALPHA_SCISSOR_THRESHOLD = 0.1;
 		
 	ALBEDO = color;
-	ALPHA = 0.3 * opacity;
+	//ALPHA = 0.3 * ALPHA;
 }
 
 void light() {
